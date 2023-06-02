@@ -1,0 +1,162 @@
+<html>
+
+<head>
+
+<script type="text/javascript">
+	function agregarFila(obj){
+		obj.value = parseInt(obj.value) + 1;
+		var oId = obj.value;
+		var nombre = document.getElementById("txtNombre");
+		var edad = document.getElementById("txtEdad");
+		var direccion = document.getElementById("txtDireccion");
+		var sexo = document.getElementById("selSexo");
+		var estCivil = document.getElementById("selEstCivil");
+		
+		var strHtml1 = nombre.value + 
+				'<input type="hidden" id="hdnNombre_' + oId + 
+				'" name="hdnNombre_' + oId + 
+				'" value="' + nombre.value + '"/>' ;
+
+		var strHtml2 = edad.value + 
+				'<input type="hidden" id="hdnEdad_' + oId + 
+				'" name="hdnEdad_' + oId + 
+				'" value="' + edad.value + '"/>' ;
+
+		var strHtml3 = direccion.value + 
+				'<input type="hidden" id="hdnDireccion_' + oId + 
+				'" name="hdnDireccion_' + oId + 
+				'" value="' + direccion.value + '"/>' ;
+
+		var strHtml4 = sexo.value + 
+				'<input type="hidden" id="hdnSexo_' + oId + 
+				'" name="hdnSexo_' + oId + 
+				'" value="' + sexo.value + '"/>' ;
+
+		var strHtml5 = estCivil.value + 
+				'<input type="hidden" id="hdnEstCivil_' + oId + 
+				'" name="hdnEstCivil_' + oId + 
+				'" value="' + estCivil.value + '"/>' ;
+
+    	var strHtml6 = '<img src="images/delete.png" width="16" ' + 
+				'height="16" alt="Eliminar" ' + 
+				'onclick="if(confirm(\'Realmente desea ' + 
+				'eliminar este detalle?\')){eliminarFila(' + 
+				oId + ');}"/>Borrar';
+
+    		strHtml6 += '<input type="hidden" id="hdnIdCampos_' + oId +
+				'" name="hdnIdCampos[]" value="' + oId + '" />';
+
+		var objTr = document.createElement("tr");
+		objTr.id = "rowDetalle_" + oId;
+		var objTd1 = document.createElement("td");
+		objTd1.id = "tdDetalle_1_" + oId;
+		objTd1.innerHTML = strHtml1;
+		var objTd2 = document.createElement("td");
+		objTd2.id = "tdDetalle_2_" + oId;	
+		objTd2.innerHTML = strHtml2;
+		var objTd3 = document.createElement("td");
+		objTd3.id = "tdDetall_3_" + oId;	
+		objTd3.innerHTML = strHtml3;
+		var objTd4 = document.createElement("td");
+		objTd4.id = "tdDetalle_4_" + oId;	
+		objTd4.innerHTML = strHtml4;
+		var objTd5 = document.createElement("td");
+		objTd5.id = "tdDetalle_5_" + oId;	
+		objTd5.innerHTML = strHtml5;
+		var objTd6 = document.createElement("td");
+		objTd6.id = "tdDetalle_6_" + oId;	
+		objTd6.innerHTML = strHtml6;
+
+		objTr.appendChild(objTd1);
+		objTr.appendChild(objTd2);
+		objTr.appendChild(objTd3);
+		objTr.appendChild(objTd4);
+		objTr.appendChild(objTd5);
+		objTr.appendChild(objTd6);
+
+		var objTbody = document.getElementById("tbDetalle");
+		objTbody.appendChild(objTr);
+		return false;	//evita que haya un submit por equivocacion.
+	}
+	// FUNCION QUE SE ENCARGA DE ELMINAR LAS FILAS 
+	function eliminarFila(oId){
+		var objHijo = document.getElementById('rowDetalle_' + oId);
+		var objPadre = objHijo.parentNode;
+		objPadre.removeChild(objHijo);
+		return false;
+	}
+	// #LIMPIA TODOS LOS DATOS QUE TENGA LLENOS
+	function cancelar(){
+		var obj = document.getElementById('tbDetalle');
+		var objPadre = obj.parentNode;
+		objPadre.removeChild(obj);
+		obj = document.createElement("tbody");
+		obj.id = 'tbDetalle';
+		objPadre.appendChild(obj);
+		return false;
+	}
+</script>
+</head>
+<body>
+
+<form name="proyecto" id="proyecto" action="" method="post">
+    <input type="hidden" id="num_campos" name="num_campos" value="0" />
+    <input type="hidden" id="cant_campos" name="cant_campos" value="0"/>
+	<fieldset>
+		<legend>El formulario</legend>
+
+		<label for="txtNombre">Nombre:</label>
+		<input type="text" id="txtNombre" name="txtNombre" value=""/>
+
+		<label  for="txtEdad">Edad:</label>
+		<input type="text" id="txtEdad" name="txtEdad" value=""  />
+
+		<label for="txtDireccion">Direccion:</label>
+		<input type="text" id="txtDireccion" name="txtDireccion" 
+			value="" />
+			
+		<label for="selSexo">Sexo:</label>
+		<select id="selSexo" name="selSexo">
+			<option value="-">Seleccione</option>
+			<option value="Hombre">Hombre</option>
+			<option value="Mujer">Mujer</option>
+		</select>
+
+		<label for="selEstCivil">Estado Civil:</label>
+			<select id="selEstCivil" name="selEstCivil">
+				<option value="-">Seleccione</option>
+				<option value="Soltero">Soltero</option>
+				<option value="Casado">Casado</option>
+				<option value="Viudo">Viudo</option>
+			</select>
+	</fieldset>
+ 
+	<input type="reset" id="btnCancel" name="btnCancel" value="Cancelar" 
+		onclick="cancelar();"/>
+
+	<input type="button" id="btnAgregar" name="btnAgregar" 
+		value="Agregar Persona" 
+		onclick="agregarFila(document.getElementById('cant_campos'));"/>
+
+	<fieldset>
+		<legend>
+			Detalle de Personas
+		</legend>
+		<table width="100%" id="tblDetalle" class="listado">
+			<thead>
+				<tr>
+					<th>Nombre</th>
+					<th>Edad</th>
+					<th>Direccion</th>
+					<th>Sexo</th>
+					<th>Est. Civil</th>
+					<th>Accion</th>
+				</tr>
+			</thead>
+			<tbody id="tbDetalle">
+			</tbody>
+		</table>
+	</fieldset>
+</form>
+</body>
+</html>
